@@ -1,0 +1,1 @@
+# Coloca tus scripts .sql en esta carpeta para que PostgreSQL los ejecute automáticamente al iniciar por primera vez.

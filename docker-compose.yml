@@ -1,0 +1,68 @@
+services:
+  # ==========================================
+  # PostgreSQL (Base de datos Relacional)
+  # ==========================================
+  postgres:
+    image: postgres:15
+    container_name: ${PROJECT_NAME}_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-alumno}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secreta}
+      POSTGRES_DB: ${POSTGRES_DB:-clase_pg}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init/postgres:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  # pgAdmin (Interfaz gráfica web para PostgreSQL)
+  # Acceso web: http://localhost:5050
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ${PROJECT_NAME}_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@clase.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # ==========================================
+  # MySQL (Base de datos Relacional)
+  # ==========================================
+  mysql:
+    image: mysql:8.0
+    container_name: ${PROJECT_NAME}_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_secreta}
+      MYSQL_USER: ${MYSQL_USER:-alumno}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secreta}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-atmoscope_db}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init/mysql:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  # phpMyAdmin (Interfaz gráfica web para MySQL)
+  # Acceso web: http://localhost:8080
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${PROJECT_NAME}_phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER:-alumno}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-secreta}
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  mysql_data:

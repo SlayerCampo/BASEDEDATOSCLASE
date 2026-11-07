@@ -1,0 +1,14 @@
+# Variables de entorno y credenciales
+.env
+.env.local
+.env.*.local
+
+# Datos y volúmenes locales
+*.log
+docker-volumes/
+
+# Archivos de sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
